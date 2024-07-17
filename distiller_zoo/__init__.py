@@ -15,5 +15,5 @@ from .ATD import ATD, Sample_entropy
 from .ReviewKD import hcl, build_review_kd
 from .OFD import OFD
 from .DKD import DKD
-from .EDK import EDK
+from .DKE import DKE
 from .CCD import CCD
