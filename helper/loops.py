@@ -121,7 +121,7 @@ def train_distill(epoch, train_loader, module_list, criterion_list, optimizer, o
         # other kd beyond KL divergence
         if opt.distill == 'kd':
             loss_kd = 0
-        elif opt.distill == 'edk' or opt.distill == 'ccd':
+        elif opt.distill == 'dke' or opt.distill == 'ccd':
             if opt.use_DA:
                 if opt.dataset == 'cifar100':
                     loss = criterion_kd(logit_s, logit_s_aux, logit_t, logit_t_aux, target)
@@ -197,7 +197,7 @@ def train_distill(epoch, train_loader, module_list, criterion_list, optimizer, o
         else:
             raise NotImplementedError(opt.distill)
 
-        if opt.distill == 'atd' or opt.distill == 'ReviewKD_atd' or opt.distill == 'edk' or opt.distill == 'ccd':
+        if opt.distill == 'atd' or opt.distill == 'ReviewKD_atd' or opt.distill == 'dke' or opt.distill == 'ccd':
             pass
         elif opt.distill == 'dkd':
             loss_cls = criterion_cls(logit_s, target)
