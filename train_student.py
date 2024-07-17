@@ -29,7 +29,7 @@ from dataset.tinyimagenet import get_tinyimagenet_dataloader
 
 from helper.util import adjust_learning_rate, adjust_learning_rate_wram_up
 
-from distiller_zoo import DistillKL, HintLoss, Attention, Similarity, Correlation, VIDLoss, RKDLoss, OFD, DKD, EDK, CCD
+from distiller_zoo import DistillKL, HintLoss, Attention, Similarity, Correlation, VIDLoss, RKDLoss, OFD, DKD, DKE, CCD
 from distiller_zoo import PKT, ABLoss, FactorTransfer, KDSVD, FSP, NSTLoss, ATD, Sample_entropy, build_review_kd
 from crd.criterion import CRDLoss
 
@@ -73,10 +73,10 @@ def parse_option():
     parser.add_argument('--path_t', type=str, default='./save/models/resnet56_vanilla/ckpt_epoch_240.pth', help='teacher model snapshot')
 
     # distillation
-    parser.add_argument('--distill', type=str, default='edk', choices=['kd', 'hint', 'attention', 'similarity', 'dkd',
+    parser.add_argument('--distill', type=str, default='DKE', choices=['kd', 'hint', 'attention', 'similarity', 'dkd',
                                                                       'correlation', 'vid', 'crd', 'kdsvd', 'fsp',
                                                                         'rkd', 'pkt', 'abound', 'factor', 'nst', 'ofd',
-                                                                        'atd', 'ReviewKD_atd', 'ReviewKD', 'edk', 'ccd'])
+                                                                        'atd', 'ReviewKD_atd', 'ReviewKD', 'DKE', 'ccd'])
     parser.add_argument('--trial', type=str, default='1', help='trial id')
 
     parser.add_argument('-r', '--gamma', type=float, default=1.0, help='weight for classification')
@@ -123,7 +123,7 @@ def parse_option():
         opt.lr_decay_epochs.append(int(it))
 
     opt.model_t = get_teacher_name(opt.path_t)
-    if opt.distill == 'edk' or opt.distill == 'ccd':
+    if opt.distill == 'DKE' or opt.distill == 'ccd':
         opt.model_name = 'S({})_T({})_{}_{}_r({})_a({})_b({})_t({})_s({})_Mu({})_{}'.format(opt.model_s, opt.model_t,
                  opt.dataset, opt.distill, opt.gamma, opt.alpha, opt.beta, opt.kd_T, opt.seed, opt.multiple, opt.trial)
     else:
@@ -254,8 +254,8 @@ def main():
     criterion_div = DistillKL(opt.kd_T)
     if opt.distill == 'kd':
         criterion_kd = DistillKL(opt.kd_T)
-    elif opt.distill == 'edk':
-        criterion_kd = EDK(opt.kd_T, opt.gamma, opt.alpha, opt.beta, opt.multiple)
+    elif opt.distill == 'DKE':
+        criterion_kd = DKE(opt.kd_T, opt.gamma, opt.alpha, opt.beta, opt.multiple)
     elif opt.distill == 'ccd':
         criterion_kd = CCD(opt.kd_T, opt.gamma, opt.alpha, opt.beta, opt.multiple)
     elif opt.distill == 'atd':
