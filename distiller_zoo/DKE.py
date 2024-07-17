@@ -26,9 +26,9 @@ def weighting(logit, T):
     return weighting.view(B_size, -1)
 
 
-class EDK(nn.Module):
+class DKE(nn.Module):
     def __init__(self, T, gamma, alpha, beta, multiple):
-        super(EDK, self).__init__()
+        super(DKE, self).__init__()
         self.T = T
         self.gamma = gamma
         self.alpha = alpha
